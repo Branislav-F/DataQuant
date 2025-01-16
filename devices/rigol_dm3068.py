@@ -1,5 +1,5 @@
 import pyvisa
-from device_base import BaseDevice
+from devices.device_base import BaseDevice
 
 class RigolDM3068(BaseDevice):
     def __init__(self, resource_name):
@@ -8,19 +8,11 @@ class RigolDM3068(BaseDevice):
         self.device = None
 
     def connect(self):
-        """
-        Connect to the Rigol DM3068 device.
-        """
         self.device = self.rm.open_resource(self.resource_name)
         self.device.timeout = 5000
         print(f"Connected to {self.resource_name}")
 
     def measure(self, quantity: str):
-        """
-        Measure the specified quantity.
-        :param quantity: Name of the quantity (e.g., "current", "voltage").
-        :return: The measured value.
-        """
         commands = {
             "current": ":MEAS:CURR:DC?",
             "voltage": ":MEAS:VOLT:DC?",
@@ -34,9 +26,6 @@ class RigolDM3068(BaseDevice):
         return float(result)
 
     def disconnect(self):
-        """
-        Disconnect from the Rigol DM3068 device.
-        """
         if self.device:
             self.device.close()
             self.device = None
@@ -44,10 +33,6 @@ class RigolDM3068(BaseDevice):
 
     @staticmethod
     def find_devices():
-        """
-        Find all connected VISA devices.
-        :return: List of available device addresses.
-        """
         rm = pyvisa.ResourceManager()
         devices = rm.list_resources()
         print("Available devices:")
